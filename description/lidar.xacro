@@ -4,7 +4,7 @@
     <joint name="laser_joint" type="fixed">
         <parent link="chassis"/>
         <child link="laser_frame"/>
-        <origin xyz="0.1 0 0.175" rpy="0 0 0"/>
+        <origin xyz="0.1 0 0.3" rpy="0 0 0"/>
     </joint>
 
     <link name="laser_frame">
@@ -27,8 +27,8 @@
     <gazebo reference="laser_frame">
         <sensor name="laser" type="gpu_lidar">
             <pose> 0 0 0 0 0 0 </pose>
-            <visualize>false</visualize>
             <update_rate>10</update_rate>
+            <topic>scan</topic>          
             <lidar>
                 <scan>
                     <horizontal>
@@ -42,8 +42,8 @@
                     <max>12</max>
                 </range>
             </lidar>
-            <topic>scan</topic>
-            <gz_frame_id>laser_frame</gz_frame_id>
+            <always_on>1</always_on>
+            <visualize>1</visualize>
         </sensor>
     </gazebo>
 </robot>

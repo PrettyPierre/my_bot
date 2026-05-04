@@ -38,27 +38,102 @@
         <visual>
             <origin xyz="0.15 0 0.075" rpy="0 0 0"/>
             <geometry>
-                <box size="0.3 0.3 0.15"/>
+                <cylinder length="0.3" radius="0.5"/>
             </geometry>
             <material name="white"/>
         </visual>
         <collision>
             <origin xyz="0.15 0 0.075" rpy="0 0 0"/>
             <geometry>
-                <box size="0.3 0.3 0.15"/>
+                <cylinder length="0.3" radius="0.5"/>
             </geometry>
         </collision>
-        <xacro:inertial_box mass="0.5" x="0.3" y="0.3" z="0.15">
+        <xacro:inertial_cylinder mass="0.5" length="0.3" radius="0.5">
             <origin xyz="0.15 0 0.075" rpy="0 0 0"/>
-        </xacro:inertial_box>
+        </xacro:inertial_cylinder>
     </link>
 
+    <joint name="badboy0" type="fixed">
+        <parent link="chassis"/>
+        <child link="badboy_link0"/>
+        <origin xyz="-0.2 0 0.3"/>
+    </joint>
+
+    <link name="badboy_link0">
+        <visual>
+            <origin xyz="-0.2 0 0.3" rpy="0 0 0"/>
+            <geometry>
+                <cylinder length="1" radius="0.005"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <origin xyz="-0.2 0 0.3" rpy="0 0 0"/>
+            <geometry>
+                <cylinder length="1" radius="0.005"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="0.1" length="1" radius="0.005">
+            <origin xyz="-0.2 0 0.3" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
+    </link>
+
+    <joint name="badboy1" type="fixed">
+        <parent link="chassis"/>
+        <child link="badboy_link1"/>
+        <origin xyz="0.2 0.2 0.3"/>
+    </joint>
+
+    <link name="badboy_link1">
+        <visual>
+            <origin xyz="0.2 0.2 0.3" rpy="0 0 0"/>
+            <geometry>
+                <cylinder length="1" radius="0.005"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <origin xyz="0.2 0.2 0.3" rpy="0 0 0"/>
+            <geometry>
+                <cylinder length="1" radius="0.005"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="0.1" length="1" radius="0.005">
+            <origin xyz="0.2 0.2 0.3" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
+    </link>
+     
+    <joint name="badboy2" type="fixed">
+        <parent link="chassis"/>
+        <child link="badboy_link2"/>
+        <origin xyz="0.2 -0.2 0.3"/>
+    </joint>
+
+    <link name="badboy_link2">
+        <visual>
+            <origin xyz="0.2 -0.2 0.3" rpy="0 0 0"/>
+            <geometry>
+                <cylinder length="1" radius="0.005"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <origin xyz="0.2 -0.2 0.3" rpy="0 0 0"/>
+            <geometry>
+                <cylinder length="1" radius="0.005"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="0.1" length="1" radius="0.005">
+            <origin xyz="0.2 -0.2 0.3" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
+    </link>
+    
     <!-- LEFT WHEEL -->
 
     <joint name="left_wheel_joint" type="continuous">
         <parent link="base_link"/>
         <child link="left_wheel"/>
-        <origin xyz="0 0.15 0" rpy="-${pi/2} 0 0"/>
+        <origin xyz="0 0.3 0" rpy="-${pi/2} 0 0"/>
         <axis xyz="0 0 1"/>
         <limit effort="0.05" velocity="10.0"/>
     </joint>
@@ -85,7 +160,7 @@
     <joint name="right_wheel_joint" type="continuous">
         <parent link="base_link"/>
         <child link="right_wheel"/>
-        <origin xyz="0 -0.15 0" rpy="${pi/2} 0 0"/>
+        <origin xyz="0 -0.3 0" rpy="${pi/2} 0 0"/>
         <axis xyz="0 0 -1"/>
         <limit effort="0.05" velocity="10.0"/>
     </joint>
