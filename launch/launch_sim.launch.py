@@ -97,7 +97,7 @@ def generate_launch_description():
         world_arg,
         gazebo,
         spawn_entity,
-	    ros_gz_bridge	
+	    ros_gz_bridge,	
         diff_drive_spawner,
         joint_broad_spawner,
         twist_mux,

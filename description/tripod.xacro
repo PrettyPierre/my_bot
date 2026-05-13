@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="tripod">
+
+    <!-- Parameters -->
+    <xacro:property name="rod_radius" value="0.01"/>        <!-- 1 cm -->
+    <xacro:property name="rod_length" value="1.5"/>         <!-- 1.5 m -->
+    <xacro:property name="side" value="0.20"/>              <!-- 20 cm -->
+    <xacro:property name="r" value="${side / sqrt(3)}"/>
+
+    <!-- Base triangle coordinates -->
+    <xacro:property name="p1x" value="${ r }"/>
+    <xacro:property name="p1y" value="0"/>
+
+    <xacro:property name="p2x" value="${ -r/2 }"/>
+    <xacro:property name="p2y" value="${  side/2 }"/>
+
+    <xacro:property name="p3x" value="${ -r/2 }"/>
+    <xacro:property name="p3y" value="${ -side/2 }"/>
+
+    <!-- Apex -->
+    <xacro:property name="apex_x" value="0"/>
+    <xacro:property name="apex_y" value="0"/>
+    <xacro:property name="apex_z" value="${ rod_length }"/>
+
+    <!-- Helper macro to create a rod between two points -->
+    <xacro:macro name="rod_between" params="name x1 y1 z1 x2 y2 z2">
+      <link name="${name}_link">
+        <visual>
+          <origin xyz="0 0 ${rod_length/2}" rpy="0 0 0"/>
+          <geometry>
+            <cylinder radius="${rod_radius}" length="${rod_length}"/>
+          </geometry>
+          <material name="grey">
+            <color rgba="0.6 0.6 0.6 1"/>
+          </material>
+        </visual>
+        <collision>
+          <origin xyz="0 0 ${rod_length/2}" rpy="0 0 0"/>
+          <geometry>
+            <cylinder radius="${rod_radius}" length="${rod_length}"/>
+          </geometry>
+        </collision>
+        <inertial>
+          <mass value="0.2"/>
+          <origin xyz="0 0 ${rod_length/2}" rpy="0 0 0"/>
+          <inertia ixx="0.001" iyy="0.001" izz="0.001" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+      </link>
+
+      <!-- Compute orientation -->
+      <joint name="${name}_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="${name}_link"/>
+
+        <!-- Position at base point -->
+        <origin xyz="${x1} ${y1} ${z1}"
+                rpy="${atan2(y2-y1, x2-x1)} 
+                     ${acos((z2-z1)/rod_length)} 
+                     0"/>
+      </joint>
+    </xacro:macro>
+
+    <!-- Rod 1 -->
+    <xacro:rod_between name="rod1"
+                       x1="${p1x}" y1="${p1y}" z1="0"
+                       x2="${apex_x}" y2="${apex_y}" z2="${apex_z}"
+                       parent="base_link"/>
+
+    <!-- Rod 2 -->
+    <xacro:rod_between name="rod2"
+                       x1="${p2x}" y1="${p2y}" z1="0"
+                       x2="${apex_x}" y2="${apex_y}" z2="${apex_z}"
+                       parent="base_link"/>
+
+    <!-- Rod 3 -->
+    <xacro:rod_between name="rod3"
+                       x1="${p3x}" y1="${p3y}" z1="0"
+                       x2="${apex_x}" y2="${apex_y}" z2="${apex_z}"
+                       parent="base_link"/>
+
+    <!-- Top link for mounting camera/servo -->
+    <link name="tripod_top_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <sphere radius="0.03"/>
+        </geometry>
+        <material name="red">
+          <color rgba="1 0 0 1"/>
+        </material>
+      </visual>
+    </link>
+
+    <joint name="tripod_top_joint" type="fixed">
+      <parent link="rod1_link"/>
+      <child link="tripod_top_link"/>
+      <origin xyz="0 0 ${rod_length}" rpy="0 0 0"/>
+    </joint>
+
+  </xacro:macro>
+
+</robot>

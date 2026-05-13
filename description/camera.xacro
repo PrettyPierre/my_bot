@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Camera module macro -->
+  <xacro:macro name="camera_module">
+    
+    <!-- Camera physical parameters -->
+    <xacro:property name="cam_width"  value="0.10"/>   <!-- 10 cm -->
+    <xacro:property name="cam_height" value="0.04"/>   <!-- 4 cm -->
+    <xacro:property name="cam_depth"  value="0.03"/>   <!-- 3 cm -->
+    <xacro:property name="lens_radius" value="0.012"/> <!-- 1.2 cm -->
+    <xacro:property name="lens_length" value="0.015"/> <!-- 1.5 cm -->
+
+    <!-- Camera body -->
+    <link name="camera_link">
+      <visual>
+        <origin xyz="0 0 ${cam_height/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${cam_width} ${cam_depth} ${cam_height}"/>
+        </geometry>
+        <material name="black">
+          <color rgba="0.1 0.1 0.1 1"/>
+        </material>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 ${cam_height/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${cam_width} ${cam_depth} ${cam_height}"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="0.15"/>
+        <origin xyz="0 0 ${cam_height/2}" rpy="0 0 0"/>
+        <inertia ixx="0.0002" iyy="0.0002" izz="0.0002"
+                 ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+    </link>
+
+    <!-- Lens -->
+    <link name="camera_lens_link">
+      <visual>
+        <origin xyz="${cam_width/2 + lens_length/2} 0 ${cam_height/2}" rpy="0 1.5708 0"/>
+        <geometry>
+          <cylinder radius="${lens_radius}" length="${lens_length}"/>
+        </geometry>
+        <material name="darkgrey">
+          <color rgba="0.2 0.2 0.2 1"/>
+        </material>
+      </visual>
+
+      <collision>
+        <origin xyz="${cam_width/2 + lens_length/2} 0 ${cam_height/2}" rpy="0 1.5708 0"/>
+        <geometry>
+          <cylinder radius="${lens_radius}" length="${lens_length}"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="0.02"/>
+        <origin xyz="${cam_width/2 + lens_length/2} 0 ${cam_height/2}" rpy="0 0 0"/>
+        <inertia ixx="0.00001" iyy="0.00001" izz="0.00001"
+                 ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+    </link>
+
+    <!-- Joint: camera body to tripod top -->
+    <joint name="camera_mount_joint" type="fixed">
+      <parent link="tripod_top_link"/>
+      <child link="camera_link"/>
+      <origin xyz="0 0 0.03" rpy="0 0 0"/>
+    </joint>
+
+    <!-- Joint: lens to camera body -->
+    <joint name="camera_lens_joint" type="fixed">
+      <parent link="camera_link"/>
+      <child link="camera_lens_link"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <!-- Optional camera optical frame (ROS REP‑103 compliant) -->
+    <link name="camera_optical_frame"/>
+    <joint name="camera_optical_joint" type="fixed">
+      <parent link="camera_link"/>
+      <child link="camera_optical_frame"/>
+      <origin xyz="${cam_width/2} 0 ${cam_height/2}" rpy="-1.5708 0 -1.5708"/>
+    </joint>
+
+  </xacro:macro>
+
+</robot>
